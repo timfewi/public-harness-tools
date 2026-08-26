@@ -1,0 +1,4 @@
+interface:
+  display_name: "Graphic Designer"
+  short_description: "Create original fixed-format visual compositions"
+  default_prompt: "Use $graphic-designer to create this visual asset."

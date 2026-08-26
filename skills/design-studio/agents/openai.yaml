@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design Studio"
+  short_description: "Route mixed briefs to the right design specialist"
+  default_prompt: "Use $design-studio to route this brief and complete the design work."

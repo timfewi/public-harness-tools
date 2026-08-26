@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sui Move Review"
+  short_description: "Review Sui Move contracts and risks"
+  default_prompt: "Use $sui-move-review to review this Sui Move package for correctness and risk."

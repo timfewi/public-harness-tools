@@ -1,0 +1,4 @@
+interface:
+  display_name: "Website Designer"
+  short_description: "Design distinctive production-ready websites"
+  default_prompt: "Use $website-designer to design and build this website."

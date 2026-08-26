@@ -1,0 +1,4 @@
+interface:
+  display_name: "Motion Designer"
+  short_description: "Design purposeful motion and animated interactions"
+  default_prompt: "Use $motion-designer to design and implement this animation."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sui Move"
+  short_description: "Route source-backed Sui Move work"
+  default_prompt: "Use $sui-move to handle this Sui Move request with current local sources."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design System Designer"
+  short_description: "Build coherent tokens and accessible components"
+  default_prompt: "Use $design-system-designer to create or extend this design system."

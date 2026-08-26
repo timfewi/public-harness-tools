@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sui Move Author"
+  short_description: "Build and debug Sui Move packages"
+  default_prompt: "Use $sui-move-author to implement this Sui Move package change."

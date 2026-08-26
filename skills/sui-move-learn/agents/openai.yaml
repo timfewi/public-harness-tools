@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sui Move Learn"
+  short_description: "Learn Sui Move with local sources"
+  default_prompt: "Use $sui-move-learn to teach me this Sui Move concept interactively."

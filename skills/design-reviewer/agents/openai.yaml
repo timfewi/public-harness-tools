@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design Reviewer"
+  short_description: "Prioritized craft critique with concrete fixes"
+  default_prompt: "Use $design-reviewer to review this artifact and prioritize the fixes."
