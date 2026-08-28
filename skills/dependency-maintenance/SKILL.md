@@ -3,11 +3,6 @@ name: dependency-maintenance
 description: Inventory, assess, update, and verify project dependencies and lockfiles with minimal compatible change sets. Use for routine, security, license, or support-window maintenance; not for CI topology or publishing releases.
 ---
 
----
-name: dependency-maintenance
-description: Inventory, assess, update, and verify project dependencies and lockfiles with minimal compatible change sets. Use for routine, security, license, or support-window maintenance; not for CI topology or publishing releases.
----
-
 # Dependency Maintenance
 
 Produce the smallest justified dependency change set with a reproducible resolution record and evidence that compatibility, security, licensing, and lockfile state were evaluated. Do not equate newest with safest or compatible.
@@ -75,4 +70,4 @@ Fail or stop when manifests and lockfiles disagree; the resolver changes unrelat
 
 This skill owns dependency inventory, update selection, resolution, lockfiles, advisories, licenses, and update verification. ci-workflows owns scheduling and permissions for automated checks. test-and-regression owns new regression oracles and flaky-test diagnosis. release-engineering owns release artifacts, general SBOM/provenance, and publication. wasm-component-engineering owns WIT/component compatibility even when a component dependency changes.
 
-Primary references: OSV-Scanner project source scanning at https://google.github.io/osv-scanner/usage/scan-source, its remediation safety warning at https://google.github.io/osv-scanner/usage/, Cargo update behavior at https://doc.rust-lang.org/cargo/commands/cargo-update.html, and npm audit behavior at https://docs.npmjs.com/cli/v10/commands/npm-audit/. Always use official documentation for the repository's pinned ecosystem-manager version.
+Primary references: OSV-Scanner project source scanning at https://google.github.io/osv-scanner/usage/scan-source, its remediation safety warning at https://google.github.io/osv-scanner/usage/, Cargo update behavior at https://doc.rust-lang.org/cargo/commands/cargo-update.html, and the current npm audit documentation at https://docs.npmjs.com/cli/commands/npm-audit/. Always use official documentation for the repository's pinned ecosystem-manager version.

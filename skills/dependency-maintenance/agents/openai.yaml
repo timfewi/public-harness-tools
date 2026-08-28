@@ -1,0 +1,4 @@
+interface:
+  display_name: "Dependency Maintenance"
+  short_description: "Update dependencies with bounded compatibility risk"
+  default_prompt: "Use $dependency-maintenance to assess and implement this dependency update."
