@@ -1,6 +1,6 @@
 ---
 name: ci-workflows
-description: Design, refactor, and verify CI pipeline execution contracts, permissions, matrices, caches, artifacts, and failure semantics across providers. Use for pipeline and runner behavior; not for release contents or test-case design.
+description: Design, refactor, and verify CI pipeline execution contracts, permissions, matrices, caches, artifacts, and failure semantics across providers. Use for pipeline and runner behavior, including CI-only environment or scheduling failures; not for release contents or regression-test, fixture, and oracle design.
 ---
 
 # CI Workflows
@@ -70,4 +70,4 @@ Negative gates must demonstrate that malformed configuration fails validation; a
 
 This skill owns pipeline topology, triggers, runners, permissions, caches, matrices, concurrency, and job/artifact contracts. test-and-regression owns test oracles, fixtures, baselines, and flaky-test diagnosis. release-engineering owns versions, releasable subjects, SBOM/provenance contents, signing, and publication. dependency-maintenance owns dependency selection; this skill only schedules its checks.
 
-Primary references: GitHub Actions secure-use guidance at https://docs.github.com/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions, workflow syntax at https://docs.github.com/actions/using-workflows/workflow-syntax-for-github-actions, concurrency at https://docs.github.com/actions/writing-workflows/choosing-what-your-workflow-does/control-the-concurrency-of-workflows-and-jobs, and dependency caching at https://docs.github.com/actions/configuring-and-managing-workflows/caching-dependencies-to-speed-up-workflows. Apply equivalent official guidance for the repository's actual provider.
+Primary references: GitHub Actions secure-use guidance at https://docs.github.com/en/actions/reference/security/secure-use, workflow syntax at https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax, concurrency at https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency, and dependency caching at https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching. Apply equivalent official guidance for the repository's actual provider.
