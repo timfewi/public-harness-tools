@@ -3,11 +3,6 @@ name: release-engineering
 description: Build, verify, stage, and publish software releases with versions, release notes, reproducible artifacts, SBOMs, provenance, attestations, and signatures. Use for end-to-end releases; not for CI runner design or WASM interface and capability work.
 ---
 
----
-name: release-engineering
-description: Build, verify, stage, and publish software releases with versions, release notes, reproducible artifacts, SBOMs, provenance, attestations, and signatures. Use for end-to-end releases; not for CI runner design or WASM interface and capability work.
----
-
 # Release Engineering
 
 Produce a release evidence bundle whose artifacts can be traced to one source state and independently verified. Treat staging and publication as separate outcomes: permission to prepare a release does not authorize tags, registry uploads, hosted releases, signing-service calls, or other external mutations.
@@ -86,4 +81,4 @@ Stop with a failed or incomplete result when the source state is ambiguous, requ
 
 This skill owns release contents, general SBOMs, general provenance, signing, verification, staging, and publication. Use ci-workflows for pipeline topology, runner isolation, caching, and job permissions. Use dependency-maintenance for selecting dependency updates. Use wasm-component-engineering for WIT compatibility, component composition, WASI capabilities, and WASM-specific subject inspection; it may add component metadata but must not duplicate the general release chain.
 
-Primary references: SLSA Provenance v1.1 at https://slsa.dev/spec/v1.1/provenance, SLSA artifact verification at https://slsa.dev/spec/v1.1/verifying-artifacts, SPDX 3.0.1 at https://spdx.github.io/spdx-spec/v3.0.1/, and Sigstore in-toto attestation verification at https://docs.sigstore.dev/cosign/verifying/attestation/.
+Primary references: the current SLSA Provenance specification at https://slsa.dev/spec/v1.2/provenance, SLSA artifact verification at https://slsa.dev/spec/v1.2/verifying-artifacts, SPDX 3.0.1 at https://spdx.github.io/spdx-spec/v3.0.1/, and Sigstore in-toto attestation verification at https://docs.sigstore.dev/cosign/verifying/attestation/. The SLSA provenance predicate type remains https://slsa.dev/provenance/v1; a specification-page revision does not change the predicate URI.

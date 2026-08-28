@@ -1,0 +1,4 @@
+interface:
+  display_name: "Release Engineering"
+  short_description: "Stage and publish traceable software releases"
+  default_prompt: "Use $release-engineering to stage and verify this software release."
