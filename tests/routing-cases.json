@@ -1,0 +1,1682 @@
+{
+  "collision_matrix": {
+    "release-engineering": [
+      "ci-workflows",
+      "dependency-maintenance",
+      "wasm-component-engineering"
+    ],
+    "ci-workflows": [
+      "test-and-regression",
+      "release-engineering"
+    ],
+    "dependency-maintenance": [
+      "release-engineering",
+      "wasm-component-engineering"
+    ],
+    "test-and-regression": [
+      "ci-workflows",
+      "performance-profiling"
+    ],
+    "database-migrations": [
+      "performance-profiling",
+      "release-engineering"
+    ],
+    "performance-profiling": [
+      "test-and-regression",
+      "database-migrations"
+    ],
+    "wasm-component-engineering": [
+      "release-engineering",
+      "dependency-maintenance",
+      "performance-profiling"
+    ]
+  },
+  "skills": {
+    "release-engineering": {
+      "positive": [
+        {
+          "id": "release-engineering-positive-stage-release",
+          "request": "Stage version 2.4.0 from an exact revision, generate release notes, build reproducible artifacts, and assemble SBOM and SLSA provenance evidence.",
+          "expected_selected_skills": [
+            "release-engineering"
+          ],
+          "expected_non_selected_skills": [
+            "ci-workflows",
+            "dependency-maintenance"
+          ],
+          "first_tools_or_evidence": [
+            "repository release instructions",
+            "version files, tags, and release configuration",
+            "official SLSA, SPDX, and Sigstore documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "publishing, signing, or remote mutation without exact authority",
+            "CI runner redesign unrelated to release evidence"
+          ],
+          "completion_condition": "The staged or published subjects, digests, SBOM, provenance, signatures, and independent verification all satisfy the declared release contract.",
+          "stop_condition": "Stop on ambiguous source state, missing required evidence, mismatched subjects or identities, or absent publication authority.",
+          "observed_selected_skills": [
+            "release-engineering"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "release-engineering-positive-verify-release",
+          "request": "Rebuild a tagged release twice, compare subject digests, and independently verify its signature and provenance identity.",
+          "expected_selected_skills": [
+            "release-engineering"
+          ],
+          "expected_non_selected_skills": [
+            "performance-profiling",
+            "test-and-regression"
+          ],
+          "first_tools_or_evidence": [
+            "repository release instructions",
+            "version files, tags, and release configuration",
+            "official SLSA, SPDX, and Sigstore documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "publishing, signing, or remote mutation without exact authority",
+            "CI runner redesign unrelated to release evidence"
+          ],
+          "completion_condition": "The staged or published subjects, digests, SBOM, provenance, signatures, and independent verification all satisfy the declared release contract.",
+          "stop_condition": "Stop on ambiguous source state, missing required evidence, mismatched subjects or identities, or absent publication authority.",
+          "observed_selected_skills": [
+            "release-engineering"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "release-engineering-positive-publish-release",
+          "request": "With explicit registry authority, publish the already staged artifacts and read them back to prove byte-for-byte identity.",
+          "expected_selected_skills": [
+            "release-engineering"
+          ],
+          "expected_non_selected_skills": [
+            "ci-workflows",
+            "wasm-component-engineering"
+          ],
+          "first_tools_or_evidence": [
+            "repository release instructions",
+            "version files, tags, and release configuration",
+            "official SLSA, SPDX, and Sigstore documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "publishing, signing, or remote mutation without exact authority",
+            "CI runner redesign unrelated to release evidence"
+          ],
+          "completion_condition": "The staged or published subjects, digests, SBOM, provenance, signatures, and independent verification all satisfy the declared release contract.",
+          "stop_condition": "Stop on ambiguous source state, missing required evidence, mismatched subjects or identities, or absent publication authority.",
+          "observed_selected_skills": [
+            "release-engineering"
+          ],
+          "result": "pass"
+        }
+      ],
+      "negative": [
+        {
+          "id": "release-engineering-negative-ci-matrix",
+          "request": "Redesign the pull-request CI matrix, runner permissions, cache keys, and artifact retention without changing release contents.",
+          "expected_selected_skills": [
+            "ci-workflows"
+          ],
+          "expected_non_selected_skills": [
+            "release-engineering"
+          ],
+          "first_tools_or_evidence": [
+            "workflow files and repository task wrappers",
+            "provider trust and permission model",
+            "official provider workflow documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "secrets or write tokens in untrusted jobs",
+            "hosted workflow mutation without authority",
+            "test-oracle redesign unless co-routed"
+          ],
+          "completion_condition": "Provider syntax, trust boundaries, underlying commands, required jobs, and negative failure semantics are verified.",
+          "stop_condition": "Stop when required jobs can be skipped green, untrusted code gains authority, commands cannot be reproduced, or hosted evidence is required but unavailable.",
+          "observed_selected_skills": [
+            "ci-workflows"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "release-engineering-negative-dependency-update",
+          "request": "Update a vulnerable direct dependency and its lockfile using the smallest compatible resolver change.",
+          "expected_selected_skills": [
+            "dependency-maintenance"
+          ],
+          "expected_non_selected_skills": [
+            "release-engineering"
+          ],
+          "first_tools_or_evidence": [
+            "manifests, lockfiles, and resolver pins",
+            "authoritative advisories and upstream migration notes",
+            "post-resolution dependency graph"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "broad update-all operations without rationale",
+            "release publication",
+            "hand editing resolver-owned lock data"
+          ],
+          "completion_condition": "The minimal graph diff is explained and immutable resolution, build/tests, and post-update scans satisfy policy.",
+          "stop_condition": "Stop on stale or uncertain advisory data, unexplained graph churn, integrity/source changes, incompatible licenses, or unavailable required resolution evidence.",
+          "observed_selected_skills": [
+            "dependency-maintenance"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "release-engineering-negative-wit-evolution",
+          "request": "Evolve a WIT world, inspect component imports, and test denied WASI filesystem capabilities.",
+          "expected_selected_skills": [
+            "wasm-component-engineering"
+          ],
+          "expected_non_selected_skills": [
+            "release-engineering"
+          ],
+          "first_tools_or_evidence": [
+            "WIT files, component manifests, and generated bindings",
+            "pinned wasm-tools and runtime versions",
+            "extracted WIT, import/export, and capability evidence"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "ambient capability inheritance for convenience",
+            "general release signing or publication",
+            "silent WASI retargeting"
+          ],
+          "completion_condition": "Structural validation, extracted WIT, compatibility, composition, minimum capabilities, and denied-capability tests pass.",
+          "stop_condition": "Stop on ambiguous model/WASI generation, stale bindings, incompatible WIT, unexpected imports, ambient authority, or missing component evidence.",
+          "observed_selected_skills": [
+            "wasm-component-engineering"
+          ],
+          "result": "pass"
+        }
+      ],
+      "ambiguous": [
+        {
+          "id": "release-engineering-ambiguous-release-pipeline",
+          "request": "Create a least-privilege CI release job and define the signed artifact, SBOM, provenance, staging, and publication gates.",
+          "expected_selected_skills": [
+            "ci-workflows",
+            "release-engineering"
+          ],
+          "expected_non_selected_skills": [
+            "dependency-maintenance"
+          ],
+          "first_tools_or_evidence": [
+            "workflow files and repository task wrappers",
+            "provider trust and permission model",
+            "official provider workflow documentation",
+            "repository release instructions",
+            "version files, tags, and release configuration",
+            "official SLSA, SPDX, and Sigstore documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "secrets or write tokens in untrusted jobs",
+            "hosted workflow mutation without authority",
+            "test-oracle redesign unless co-routed",
+            "publishing, signing, or remote mutation without exact authority",
+            "CI runner redesign unrelated to release evidence"
+          ],
+          "completion_condition": "Provider syntax, trust boundaries, underlying commands, required jobs, and negative failure semantics are verified. The staged or published subjects, digests, SBOM, provenance, signatures, and independent verification all satisfy the declared release contract.",
+          "stop_condition": "Stop when required jobs can be skipped green, untrusted code gains authority, commands cannot be reproduced, or hosted evidence is required but unavailable. Stop on ambiguous source state, missing required evidence, mismatched subjects or identities, or absent publication authority.",
+          "observed_selected_skills": [
+            "ci-workflows",
+            "release-engineering"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "release-engineering-ambiguous-component-release",
+          "request": "Stage a WebAssembly component release while verifying its extracted WIT, capability policy, SBOM, and general provenance.",
+          "expected_selected_skills": [
+            "wasm-component-engineering",
+            "release-engineering"
+          ],
+          "expected_non_selected_skills": [
+            "performance-profiling"
+          ],
+          "first_tools_or_evidence": [
+            "WIT files, component manifests, and generated bindings",
+            "pinned wasm-tools and runtime versions",
+            "extracted WIT, import/export, and capability evidence",
+            "repository release instructions",
+            "version files, tags, and release configuration",
+            "official SLSA, SPDX, and Sigstore documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "ambient capability inheritance for convenience",
+            "general release signing or publication",
+            "silent WASI retargeting",
+            "publishing, signing, or remote mutation without exact authority",
+            "CI runner redesign unrelated to release evidence"
+          ],
+          "completion_condition": "Structural validation, extracted WIT, compatibility, composition, minimum capabilities, and denied-capability tests pass. The staged or published subjects, digests, SBOM, provenance, signatures, and independent verification all satisfy the declared release contract.",
+          "stop_condition": "Stop on ambiguous model/WASI generation, stale bindings, incompatible WIT, unexpected imports, ambient authority, or missing component evidence. Stop on ambiguous source state, missing required evidence, mismatched subjects or identities, or absent publication authority.",
+          "observed_selected_skills": [
+            "wasm-component-engineering",
+            "release-engineering"
+          ],
+          "result": "pass"
+        }
+      ]
+    },
+    "ci-workflows": {
+      "positive": [
+        {
+          "id": "ci-workflows-positive-secure-pr",
+          "request": "Harden a fork pull-request workflow so untrusted code has read-only permissions, no secrets, and immutable action pins.",
+          "expected_selected_skills": [
+            "ci-workflows"
+          ],
+          "expected_non_selected_skills": [
+            "release-engineering",
+            "test-and-regression"
+          ],
+          "first_tools_or_evidence": [
+            "workflow files and repository task wrappers",
+            "provider trust and permission model",
+            "official provider workflow documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "secrets or write tokens in untrusted jobs",
+            "hosted workflow mutation without authority",
+            "test-oracle redesign unless co-routed"
+          ],
+          "completion_condition": "Provider syntax, trust boundaries, underlying commands, required jobs, and negative failure semantics are verified.",
+          "stop_condition": "Stop when required jobs can be skipped green, untrusted code gains authority, commands cannot be reproduced, or hosted evidence is required but unavailable.",
+          "observed_selected_skills": [
+            "ci-workflows"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "ci-workflows-positive-matrix-cache",
+          "request": "Refactor the CI job DAG, required matrix cells, cache keys, concurrency groups, and diagnostic artifacts.",
+          "expected_selected_skills": [
+            "ci-workflows"
+          ],
+          "expected_non_selected_skills": [
+            "release-engineering",
+            "performance-profiling"
+          ],
+          "first_tools_or_evidence": [
+            "workflow files and repository task wrappers",
+            "provider trust and permission model",
+            "official provider workflow documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "secrets or write tokens in untrusted jobs",
+            "hosted workflow mutation without authority",
+            "test-oracle redesign unless co-routed"
+          ],
+          "completion_condition": "Provider syntax, trust boundaries, underlying commands, required jobs, and negative failure semantics are verified.",
+          "stop_condition": "Stop when required jobs can be skipped green, untrusted code gains authority, commands cannot be reproduced, or hosted evidence is required but unavailable.",
+          "observed_selected_skills": [
+            "ci-workflows"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "ci-workflows-positive-failure-semantics",
+          "request": "Make skipped upstream jobs, missing reports, and failing commands reliably fail the required provider check.",
+          "expected_selected_skills": [
+            "ci-workflows"
+          ],
+          "expected_non_selected_skills": [
+            "test-and-regression",
+            "release-engineering"
+          ],
+          "first_tools_or_evidence": [
+            "workflow files and repository task wrappers",
+            "provider trust and permission model",
+            "official provider workflow documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "secrets or write tokens in untrusted jobs",
+            "hosted workflow mutation without authority",
+            "test-oracle redesign unless co-routed"
+          ],
+          "completion_condition": "Provider syntax, trust boundaries, underlying commands, required jobs, and negative failure semantics are verified.",
+          "stop_condition": "Stop when required jobs can be skipped green, untrusted code gains authority, commands cannot be reproduced, or hosted evidence is required but unavailable.",
+          "observed_selected_skills": [
+            "ci-workflows"
+          ],
+          "result": "pass"
+        }
+      ],
+      "negative": [
+        {
+          "id": "ci-workflows-negative-release-bundle",
+          "request": "Choose a version, produce release notes, generate an SBOM, and stage signed release artifacts.",
+          "expected_selected_skills": [
+            "release-engineering"
+          ],
+          "expected_non_selected_skills": [
+            "ci-workflows"
+          ],
+          "first_tools_or_evidence": [
+            "repository release instructions",
+            "version files, tags, and release configuration",
+            "official SLSA, SPDX, and Sigstore documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "publishing, signing, or remote mutation without exact authority",
+            "CI runner redesign unrelated to release evidence"
+          ],
+          "completion_condition": "The staged or published subjects, digests, SBOM, provenance, signatures, and independent verification all satisfy the declared release contract.",
+          "stop_condition": "Stop on ambiguous source state, missing required evidence, mismatched subjects or identities, or absent publication authority.",
+          "observed_selected_skills": [
+            "release-engineering"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "ci-workflows-negative-regression-oracle",
+          "request": "Minimize a defect reproducer and design a negative-control fixture with an independent oracle.",
+          "expected_selected_skills": [
+            "test-and-regression"
+          ],
+          "expected_non_selected_skills": [
+            "ci-workflows"
+          ],
+          "first_tools_or_evidence": [
+            "repository test conventions and focused test source",
+            "smallest reproduction argv and captured failure signature",
+            "controlled fixtures and independent oracle"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "eval-based command execution",
+            "retries presented as a green required gate",
+            "unrequested product fixes"
+          ],
+          "completion_condition": "The failure is reproduced for the intended reason and the oracle, fixtures, controls, repeat evidence, and applicable wider tests are recorded.",
+          "stop_condition": "Stop when the defect is not reproduced, controls fail for the wrong reason, signatures differ, fixtures leak state, or routine verification is the entire request.",
+          "observed_selected_skills": [
+            "test-and-regression"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "ci-workflows-negative-dependency-selection",
+          "request": "Assess advisories and choose the minimal compatible dependency and lockfile update.",
+          "expected_selected_skills": [
+            "dependency-maintenance"
+          ],
+          "expected_non_selected_skills": [
+            "ci-workflows"
+          ],
+          "first_tools_or_evidence": [
+            "manifests, lockfiles, and resolver pins",
+            "authoritative advisories and upstream migration notes",
+            "post-resolution dependency graph"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "broad update-all operations without rationale",
+            "release publication",
+            "hand editing resolver-owned lock data"
+          ],
+          "completion_condition": "The minimal graph diff is explained and immutable resolution, build/tests, and post-update scans satisfy policy.",
+          "stop_condition": "Stop on stale or uncertain advisory data, unexplained graph churn, integrity/source changes, incompatible licenses, or unavailable required resolution evidence.",
+          "observed_selected_skills": [
+            "dependency-maintenance"
+          ],
+          "result": "pass"
+        }
+      ],
+      "ambiguous": [
+        {
+          "id": "ci-workflows-ambiguous-ci-flake",
+          "request": "A test flakes only on one GitHub Actions runner; isolate the reproducer and oracle, then correct runner scheduling if evidence requires it.",
+          "expected_selected_skills": [
+            "test-and-regression",
+            "ci-workflows"
+          ],
+          "expected_non_selected_skills": [
+            "release-engineering"
+          ],
+          "first_tools_or_evidence": [
+            "repository test conventions and focused test source",
+            "smallest reproduction argv and captured failure signature",
+            "controlled fixtures and independent oracle",
+            "workflow files and repository task wrappers",
+            "provider trust and permission model",
+            "official provider workflow documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "eval-based command execution",
+            "retries presented as a green required gate",
+            "unrequested product fixes",
+            "secrets or write tokens in untrusted jobs",
+            "hosted workflow mutation without authority",
+            "test-oracle redesign unless co-routed"
+          ],
+          "completion_condition": "The failure is reproduced for the intended reason and the oracle, fixtures, controls, repeat evidence, and applicable wider tests are recorded. Provider syntax, trust boundaries, underlying commands, required jobs, and negative failure semantics are verified.",
+          "stop_condition": "Stop when the defect is not reproduced, controls fail for the wrong reason, signatures differ, fixtures leak state, or routine verification is the entire request. Stop when required jobs can be skipped green, untrusted code gains authority, commands cannot be reproduced, or hosted evidence is required but unavailable.",
+          "observed_selected_skills": [
+            "test-and-regression",
+            "ci-workflows"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "ci-workflows-ambiguous-release-job",
+          "request": "Build a CI release job with least-privilege permissions while defining the staged subjects, attestations, and publication gate.",
+          "expected_selected_skills": [
+            "ci-workflows",
+            "release-engineering"
+          ],
+          "expected_non_selected_skills": [
+            "test-and-regression"
+          ],
+          "first_tools_or_evidence": [
+            "workflow files and repository task wrappers",
+            "provider trust and permission model",
+            "official provider workflow documentation",
+            "repository release instructions",
+            "version files, tags, and release configuration",
+            "official SLSA, SPDX, and Sigstore documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "secrets or write tokens in untrusted jobs",
+            "hosted workflow mutation without authority",
+            "test-oracle redesign unless co-routed",
+            "publishing, signing, or remote mutation without exact authority",
+            "CI runner redesign unrelated to release evidence"
+          ],
+          "completion_condition": "Provider syntax, trust boundaries, underlying commands, required jobs, and negative failure semantics are verified. The staged or published subjects, digests, SBOM, provenance, signatures, and independent verification all satisfy the declared release contract.",
+          "stop_condition": "Stop when required jobs can be skipped green, untrusted code gains authority, commands cannot be reproduced, or hosted evidence is required but unavailable. Stop on ambiguous source state, missing required evidence, mismatched subjects or identities, or absent publication authority.",
+          "observed_selected_skills": [
+            "ci-workflows",
+            "release-engineering"
+          ],
+          "result": "pass"
+        }
+      ]
+    },
+    "dependency-maintenance": {
+      "positive": [
+        {
+          "id": "dependency-maintenance-positive-security-fix",
+          "request": "Inventory manifests and lockfiles, confirm an advisory's affected range, and apply the minimal security update.",
+          "expected_selected_skills": [
+            "dependency-maintenance"
+          ],
+          "expected_non_selected_skills": [
+            "release-engineering",
+            "ci-workflows"
+          ],
+          "first_tools_or_evidence": [
+            "manifests, lockfiles, and resolver pins",
+            "authoritative advisories and upstream migration notes",
+            "post-resolution dependency graph"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "broad update-all operations without rationale",
+            "release publication",
+            "hand editing resolver-owned lock data"
+          ],
+          "completion_condition": "The minimal graph diff is explained and immutable resolution, build/tests, and post-update scans satisfy policy.",
+          "stop_condition": "Stop on stale or uncertain advisory data, unexplained graph churn, integrity/source changes, incompatible licenses, or unavailable required resolution evidence.",
+          "observed_selected_skills": [
+            "dependency-maintenance"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "dependency-maintenance-positive-license-review",
+          "request": "Review transitive licenses and replace one incompatible package while keeping unrelated lock entries stable.",
+          "expected_selected_skills": [
+            "dependency-maintenance"
+          ],
+          "expected_non_selected_skills": [
+            "release-engineering",
+            "wasm-component-engineering"
+          ],
+          "first_tools_or_evidence": [
+            "manifests, lockfiles, and resolver pins",
+            "authoritative advisories and upstream migration notes",
+            "post-resolution dependency graph"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "broad update-all operations without rationale",
+            "release publication",
+            "hand editing resolver-owned lock data"
+          ],
+          "completion_condition": "The minimal graph diff is explained and immutable resolution, build/tests, and post-update scans satisfy policy.",
+          "stop_condition": "Stop on stale or uncertain advisory data, unexplained graph churn, integrity/source changes, incompatible licenses, or unavailable required resolution evidence.",
+          "observed_selected_skills": [
+            "dependency-maintenance"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "dependency-maintenance-positive-support-window",
+          "request": "Move dependencies to the supported runtime window, explain graph churn, and verify immutable resolution.",
+          "expected_selected_skills": [
+            "dependency-maintenance"
+          ],
+          "expected_non_selected_skills": [
+            "ci-workflows",
+            "test-and-regression"
+          ],
+          "first_tools_or_evidence": [
+            "manifests, lockfiles, and resolver pins",
+            "authoritative advisories and upstream migration notes",
+            "post-resolution dependency graph"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "broad update-all operations without rationale",
+            "release publication",
+            "hand editing resolver-owned lock data"
+          ],
+          "completion_condition": "The minimal graph diff is explained and immutable resolution, build/tests, and post-update scans satisfy policy.",
+          "stop_condition": "Stop on stale or uncertain advisory data, unexplained graph churn, integrity/source changes, incompatible licenses, or unavailable required resolution evidence.",
+          "observed_selected_skills": [
+            "dependency-maintenance"
+          ],
+          "result": "pass"
+        }
+      ],
+      "negative": [
+        {
+          "id": "dependency-maintenance-negative-publish-release",
+          "request": "Build, sign, attest, and publish a versioned release without changing dependency selection.",
+          "expected_selected_skills": [
+            "release-engineering"
+          ],
+          "expected_non_selected_skills": [
+            "dependency-maintenance"
+          ],
+          "first_tools_or_evidence": [
+            "repository release instructions",
+            "version files, tags, and release configuration",
+            "official SLSA, SPDX, and Sigstore documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "publishing, signing, or remote mutation without exact authority",
+            "CI runner redesign unrelated to release evidence"
+          ],
+          "completion_condition": "The staged or published subjects, digests, SBOM, provenance, signatures, and independent verification all satisfy the declared release contract.",
+          "stop_condition": "Stop on ambiguous source state, missing required evidence, mismatched subjects or identities, or absent publication authority.",
+          "observed_selected_skills": [
+            "release-engineering"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "dependency-maintenance-negative-component-compat",
+          "request": "Compare old and new WIT exports and WASI capability imports for a component dependency already selected.",
+          "expected_selected_skills": [
+            "wasm-component-engineering"
+          ],
+          "expected_non_selected_skills": [
+            "dependency-maintenance"
+          ],
+          "first_tools_or_evidence": [
+            "WIT files, component manifests, and generated bindings",
+            "pinned wasm-tools and runtime versions",
+            "extracted WIT, import/export, and capability evidence"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "ambient capability inheritance for convenience",
+            "general release signing or publication",
+            "silent WASI retargeting"
+          ],
+          "completion_condition": "Structural validation, extracted WIT, compatibility, composition, minimum capabilities, and denied-capability tests pass.",
+          "stop_condition": "Stop on ambiguous model/WASI generation, stale bindings, incompatible WIT, unexpected imports, ambient authority, or missing component evidence.",
+          "observed_selected_skills": [
+            "wasm-component-engineering"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "dependency-maintenance-negative-automation-job",
+          "request": "Schedule an existing dependency scanner in CI with safe permissions, caching, and report artifacts.",
+          "expected_selected_skills": [
+            "ci-workflows"
+          ],
+          "expected_non_selected_skills": [
+            "dependency-maintenance"
+          ],
+          "first_tools_or_evidence": [
+            "workflow files and repository task wrappers",
+            "provider trust and permission model",
+            "official provider workflow documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "secrets or write tokens in untrusted jobs",
+            "hosted workflow mutation without authority",
+            "test-oracle redesign unless co-routed"
+          ],
+          "completion_condition": "Provider syntax, trust boundaries, underlying commands, required jobs, and negative failure semantics are verified.",
+          "stop_condition": "Stop when required jobs can be skipped green, untrusted code gains authority, commands cannot be reproduced, or hosted evidence is required but unavailable.",
+          "observed_selected_skills": [
+            "ci-workflows"
+          ],
+          "result": "pass"
+        }
+      ],
+      "ambiguous": [
+        {
+          "id": "dependency-maintenance-ambiguous-update-release",
+          "request": "Select a minimal vulnerability fix, update the lockfile, and stage a release containing the verified result.",
+          "expected_selected_skills": [
+            "dependency-maintenance",
+            "release-engineering"
+          ],
+          "expected_non_selected_skills": [
+            "ci-workflows"
+          ],
+          "first_tools_or_evidence": [
+            "manifests, lockfiles, and resolver pins",
+            "authoritative advisories and upstream migration notes",
+            "post-resolution dependency graph",
+            "repository release instructions",
+            "version files, tags, and release configuration",
+            "official SLSA, SPDX, and Sigstore documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "broad update-all operations without rationale",
+            "release publication",
+            "hand editing resolver-owned lock data",
+            "publishing, signing, or remote mutation without exact authority",
+            "CI runner redesign unrelated to release evidence"
+          ],
+          "completion_condition": "The minimal graph diff is explained and immutable resolution, build/tests, and post-update scans satisfy policy. The staged or published subjects, digests, SBOM, provenance, signatures, and independent verification all satisfy the declared release contract.",
+          "stop_condition": "Stop on stale or uncertain advisory data, unexplained graph churn, integrity/source changes, incompatible licenses, or unavailable required resolution evidence. Stop on ambiguous source state, missing required evidence, mismatched subjects or identities, or absent publication authority.",
+          "observed_selected_skills": [
+            "dependency-maintenance",
+            "release-engineering"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "dependency-maintenance-ambiguous-component-update",
+          "request": "Update a component dependency and prove both resolver integrity and WIT/import compatibility for existing hosts.",
+          "expected_selected_skills": [
+            "dependency-maintenance",
+            "wasm-component-engineering"
+          ],
+          "expected_non_selected_skills": [
+            "release-engineering"
+          ],
+          "first_tools_or_evidence": [
+            "manifests, lockfiles, and resolver pins",
+            "authoritative advisories and upstream migration notes",
+            "post-resolution dependency graph",
+            "WIT files, component manifests, and generated bindings",
+            "pinned wasm-tools and runtime versions",
+            "extracted WIT, import/export, and capability evidence"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "broad update-all operations without rationale",
+            "release publication",
+            "hand editing resolver-owned lock data",
+            "ambient capability inheritance for convenience",
+            "general release signing or publication",
+            "silent WASI retargeting"
+          ],
+          "completion_condition": "The minimal graph diff is explained and immutable resolution, build/tests, and post-update scans satisfy policy. Structural validation, extracted WIT, compatibility, composition, minimum capabilities, and denied-capability tests pass.",
+          "stop_condition": "Stop on stale or uncertain advisory data, unexplained graph churn, integrity/source changes, incompatible licenses, or unavailable required resolution evidence. Stop on ambiguous model/WASI generation, stale bindings, incompatible WIT, unexpected imports, ambient authority, or missing component evidence.",
+          "observed_selected_skills": [
+            "dependency-maintenance",
+            "wasm-component-engineering"
+          ],
+          "result": "pass"
+        }
+      ]
+    },
+    "test-and-regression": {
+      "positive": [
+        {
+          "id": "test-and-regression-positive-failure-reproduction",
+          "request": "Minimize a reported failure, capture its stable signature, and preserve exact reproduction argv and environment.",
+          "expected_selected_skills": [
+            "test-and-regression"
+          ],
+          "expected_non_selected_skills": [
+            "ci-workflows",
+            "performance-profiling"
+          ],
+          "first_tools_or_evidence": [
+            "repository test conventions and focused test source",
+            "smallest reproduction argv and captured failure signature",
+            "controlled fixtures and independent oracle"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "eval-based command execution",
+            "retries presented as a green required gate",
+            "unrequested product fixes"
+          ],
+          "completion_condition": "The failure is reproduced for the intended reason and the oracle, fixtures, controls, repeat evidence, and applicable wider tests are recorded.",
+          "stop_condition": "Stop when the defect is not reproduced, controls fail for the wrong reason, signatures differ, fixtures leak state, or routine verification is the entire request.",
+          "observed_selected_skills": [
+            "test-and-regression"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "test-and-regression-positive-oracle-fixture",
+          "request": "Design an independent regression oracle, controlled fixture, negative control, and positive control for a defect.",
+          "expected_selected_skills": [
+            "test-and-regression"
+          ],
+          "expected_non_selected_skills": [
+            "ci-workflows",
+            "release-engineering"
+          ],
+          "first_tools_or_evidence": [
+            "repository test conventions and focused test source",
+            "smallest reproduction argv and captured failure signature",
+            "controlled fixtures and independent oracle"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "eval-based command execution",
+            "retries presented as a green required gate",
+            "unrequested product fixes"
+          ],
+          "completion_condition": "The failure is reproduced for the intended reason and the oracle, fixtures, controls, repeat evidence, and applicable wider tests are recorded.",
+          "stop_condition": "Stop when the defect is not reproduced, controls fail for the wrong reason, signatures differ, fixtures leak state, or routine verification is the entire request.",
+          "observed_selected_skills": [
+            "test-and-regression"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "test-and-regression-positive-flake-diagnosis",
+          "request": "Diagnose an intermittent test by repeating controlled runs, preserving every log, and classifying mixed outcomes without retries masking the gate.",
+          "expected_selected_skills": [
+            "test-and-regression"
+          ],
+          "expected_non_selected_skills": [
+            "ci-workflows",
+            "performance-profiling"
+          ],
+          "first_tools_or_evidence": [
+            "repository test conventions and focused test source",
+            "smallest reproduction argv and captured failure signature",
+            "controlled fixtures and independent oracle"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "eval-based command execution",
+            "retries presented as a green required gate",
+            "unrequested product fixes"
+          ],
+          "completion_condition": "The failure is reproduced for the intended reason and the oracle, fixtures, controls, repeat evidence, and applicable wider tests are recorded.",
+          "stop_condition": "Stop when the defect is not reproduced, controls fail for the wrong reason, signatures differ, fixtures leak state, or routine verification is the entire request.",
+          "observed_selected_skills": [
+            "test-and-regression"
+          ],
+          "result": "pass"
+        }
+      ],
+      "negative": [
+        {
+          "id": "test-and-regression-negative-routine-verification",
+          "request": "Run the repository's normal unit tests after a straightforward implementation change; no new oracle or failure investigation is requested.",
+          "expected_selected_skills": [
+            "none (repository normal verification workflow)"
+          ],
+          "expected_non_selected_skills": [
+            "test-and-regression"
+          ],
+          "first_tools_or_evidence": [
+            "repository instructions and normal verification commands",
+            "focused implementation diff"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "new regression-framework design",
+            "routine retries that hide failures"
+          ],
+          "completion_condition": "The repository's proportionate normal verification passes and its scope and residual risk are reported.",
+          "stop_condition": "Stop if the normal checks fail or the requested work expands into failure reproduction, oracle design, or performance measurement.",
+          "observed_selected_skills": [
+            "none (repository normal verification workflow)"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "test-and-regression-negative-ci-topology",
+          "request": "Change runner permissions, matrix aggregation, caches, and hosted CI artifact plumbing.",
+          "expected_selected_skills": [
+            "ci-workflows"
+          ],
+          "expected_non_selected_skills": [
+            "test-and-regression"
+          ],
+          "first_tools_or_evidence": [
+            "workflow files and repository task wrappers",
+            "provider trust and permission model",
+            "official provider workflow documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "secrets or write tokens in untrusted jobs",
+            "hosted workflow mutation without authority",
+            "test-oracle redesign unless co-routed"
+          ],
+          "completion_condition": "Provider syntax, trust boundaries, underlying commands, required jobs, and negative failure semantics are verified.",
+          "stop_condition": "Stop when required jobs can be skipped green, untrusted code gains authority, commands cannot be reproduced, or hosted evidence is required but unavailable.",
+          "observed_selected_skills": [
+            "ci-workflows"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "test-and-regression-negative-performance-gate",
+          "request": "Measure latency repeatedly with warmups, random interleaving, uncertainty, and a percentage regression budget.",
+          "expected_selected_skills": [
+            "performance-profiling"
+          ],
+          "expected_non_selected_skills": [
+            "test-and-regression"
+          ],
+          "first_tools_or_evidence": [
+            "benchmark configuration and representative workload",
+            "raw baseline measurements and environment fingerprint",
+            "official profiler documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "privilege escalation for profilers",
+            "single-run timing claims",
+            "discarding unfavorable observations"
+          ],
+          "completion_condition": "Correctness, controlled raw repetitions, variability, profiles, budget verdict, and secondary metrics support the stated conclusion.",
+          "stop_condition": "Stop or report inconclusive when correctness fails, environments differ, raw data is missing, variance overlaps the budget, or the workload is unrepresentative.",
+          "observed_selected_skills": [
+            "performance-profiling"
+          ],
+          "result": "pass"
+        }
+      ],
+      "ambiguous": [
+        {
+          "id": "test-and-regression-ambiguous-runner-flake",
+          "request": "A test fails intermittently only on one CI runner; minimize and repeat the failure, define an independent oracle with negative and positive controls, then update CI runner scheduling if evidence requires it.",
+          "expected_selected_skills": [
+            "test-and-regression",
+            "ci-workflows"
+          ],
+          "expected_non_selected_skills": [
+            "performance-profiling"
+          ],
+          "first_tools_or_evidence": [
+            "repository test conventions and focused test source",
+            "smallest reproduction argv and captured failure signature",
+            "controlled fixtures and independent oracle",
+            "workflow files and repository task wrappers",
+            "provider trust and permission model",
+            "official provider workflow documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "eval-based command execution",
+            "retries presented as a green required gate",
+            "unrequested product fixes",
+            "secrets or write tokens in untrusted jobs",
+            "hosted workflow mutation without authority",
+            "test-oracle redesign unless co-routed"
+          ],
+          "completion_condition": "The failure is reproduced for the intended reason and the oracle, fixtures, controls, repeat evidence, and applicable wider tests are recorded. Provider syntax, trust boundaries, underlying commands, required jobs, and negative failure semantics are verified.",
+          "stop_condition": "Stop when the defect is not reproduced, controls fail for the wrong reason, signatures differ, fixtures leak state, or routine verification is the entire request. Stop when required jobs can be skipped green, untrusted code gains authority, commands cannot be reproduced, or hosted evidence is required but unavailable.",
+          "observed_selected_skills": [
+            "test-and-regression",
+            "ci-workflows"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "test-and-regression-ambiguous-functional-perf",
+          "request": "An optimization needs an independent functional oracle plus a statistically defensible latency regression gate.",
+          "expected_selected_skills": [
+            "test-and-regression",
+            "performance-profiling"
+          ],
+          "expected_non_selected_skills": [
+            "ci-workflows"
+          ],
+          "first_tools_or_evidence": [
+            "repository test conventions and focused test source",
+            "smallest reproduction argv and captured failure signature",
+            "controlled fixtures and independent oracle",
+            "benchmark configuration and representative workload",
+            "raw baseline measurements and environment fingerprint",
+            "official profiler documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "eval-based command execution",
+            "retries presented as a green required gate",
+            "unrequested product fixes",
+            "privilege escalation for profilers",
+            "single-run timing claims",
+            "discarding unfavorable observations"
+          ],
+          "completion_condition": "The failure is reproduced for the intended reason and the oracle, fixtures, controls, repeat evidence, and applicable wider tests are recorded. Correctness, controlled raw repetitions, variability, profiles, budget verdict, and secondary metrics support the stated conclusion.",
+          "stop_condition": "Stop when the defect is not reproduced, controls fail for the wrong reason, signatures differ, fixtures leak state, or routine verification is the entire request. Stop or report inconclusive when correctness fails, environments differ, raw data is missing, variance overlaps the budget, or the workload is unrepresentative.",
+          "observed_selected_skills": [
+            "test-and-regression",
+            "performance-profiling"
+          ],
+          "result": "pass"
+        }
+      ]
+    },
+    "database-migrations": {
+      "positive": [
+        {
+          "id": "database-migrations-positive-expand-contract",
+          "request": "Plan and implement an expand-migrate-contract schema rollout that supports overlapping old and new application versions.",
+          "expected_selected_skills": [
+            "database-migrations"
+          ],
+          "expected_non_selected_skills": [
+            "release-engineering",
+            "performance-profiling"
+          ],
+          "first_tools_or_evidence": [
+            "migration history and schema definitions",
+            "exact database engine and migration-tool documentation",
+            "bounded production-data shape evidence"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "live DDL or traffic changes without target authority",
+            "unbounded backfills",
+            "generic SQL assumptions without exact version evidence"
+          ],
+          "completion_condition": "Compatibility phases, bounded backfill, exact lock/runtime budgets, rehearsal, invariants, and recovery evidence pass.",
+          "stop_condition": "Stop on drift, unknown engine version, unbudgeted locks or rewrites, non-idempotent backfills, failed invariants, or absent live authority.",
+          "observed_selected_skills": [
+            "database-migrations"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "database-migrations-positive-bounded-backfill",
+          "request": "Design an idempotent resumable backfill with checkpoints, batch limits, completion queries, and interruption rehearsal.",
+          "expected_selected_skills": [
+            "database-migrations"
+          ],
+          "expected_non_selected_skills": [
+            "performance-profiling",
+            "test-and-regression"
+          ],
+          "first_tools_or_evidence": [
+            "migration history and schema definitions",
+            "exact database engine and migration-tool documentation",
+            "bounded production-data shape evidence"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "live DDL or traffic changes without target authority",
+            "unbounded backfills",
+            "generic SQL assumptions without exact version evidence"
+          ],
+          "completion_condition": "Compatibility phases, bounded backfill, exact lock/runtime budgets, rehearsal, invariants, and recovery evidence pass.",
+          "stop_condition": "Stop on drift, unknown engine version, unbudgeted locks or rewrites, non-idempotent backfills, failed invariants, or absent live authority.",
+          "observed_selected_skills": [
+            "database-migrations"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "database-migrations-positive-lock-recovery",
+          "request": "Assess exact engine locks and rewrites, rehearse recovery, and define abort thresholds before a durable schema change.",
+          "expected_selected_skills": [
+            "database-migrations"
+          ],
+          "expected_non_selected_skills": [
+            "release-engineering",
+            "ci-workflows"
+          ],
+          "first_tools_or_evidence": [
+            "migration history and schema definitions",
+            "exact database engine and migration-tool documentation",
+            "bounded production-data shape evidence"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "live DDL or traffic changes without target authority",
+            "unbounded backfills",
+            "generic SQL assumptions without exact version evidence"
+          ],
+          "completion_condition": "Compatibility phases, bounded backfill, exact lock/runtime budgets, rehearsal, invariants, and recovery evidence pass.",
+          "stop_condition": "Stop on drift, unknown engine version, unbudgeted locks or rewrites, non-idempotent backfills, failed invariants, or absent live authority.",
+          "observed_selected_skills": [
+            "database-migrations"
+          ],
+          "result": "pass"
+        }
+      ],
+      "negative": [
+        {
+          "id": "database-migrations-negative-query-tuning",
+          "request": "Profile and optimize a slow database query without changing durable schema or migration history.",
+          "expected_selected_skills": [
+            "performance-profiling"
+          ],
+          "expected_non_selected_skills": [
+            "database-migrations"
+          ],
+          "first_tools_or_evidence": [
+            "benchmark configuration and representative workload",
+            "raw baseline measurements and environment fingerprint",
+            "official profiler documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "privilege escalation for profilers",
+            "single-run timing claims",
+            "discarding unfavorable observations"
+          ],
+          "completion_condition": "Correctness, controlled raw repetitions, variability, profiles, budget verdict, and secondary metrics support the stated conclusion.",
+          "stop_condition": "Stop or report inconclusive when correctness fails, environments differ, raw data is missing, variance overlaps the budget, or the workload is unrepresentative.",
+          "observed_selected_skills": [
+            "performance-profiling"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "database-migrations-negative-package-migrations",
+          "request": "Package already reviewed migration files into release artifacts and publish them without applying a database change.",
+          "expected_selected_skills": [
+            "release-engineering"
+          ],
+          "expected_non_selected_skills": [
+            "database-migrations"
+          ],
+          "first_tools_or_evidence": [
+            "repository release instructions",
+            "version files, tags, and release configuration",
+            "official SLSA, SPDX, and Sigstore documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "publishing, signing, or remote mutation without exact authority",
+            "CI runner redesign unrelated to release evidence"
+          ],
+          "completion_condition": "The staged or published subjects, digests, SBOM, provenance, signatures, and independent verification all satisfy the declared release contract.",
+          "stop_condition": "Stop on ambiguous source state, missing required evidence, mismatched subjects or identities, or absent publication authority.",
+          "observed_selected_skills": [
+            "release-engineering"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "database-migrations-negative-migration-ci",
+          "request": "Add syntax validation for existing migrations to a CI matrix with provider permissions and report artifacts.",
+          "expected_selected_skills": [
+            "ci-workflows"
+          ],
+          "expected_non_selected_skills": [
+            "database-migrations"
+          ],
+          "first_tools_or_evidence": [
+            "workflow files and repository task wrappers",
+            "provider trust and permission model",
+            "official provider workflow documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "secrets or write tokens in untrusted jobs",
+            "hosted workflow mutation without authority",
+            "test-oracle redesign unless co-routed"
+          ],
+          "completion_condition": "Provider syntax, trust boundaries, underlying commands, required jobs, and negative failure semantics are verified.",
+          "stop_condition": "Stop when required jobs can be skipped green, untrusted code gains authority, commands cannot be reproduced, or hosted evidence is required but unavailable.",
+          "observed_selected_skills": [
+            "ci-workflows"
+          ],
+          "result": "pass"
+        }
+      ],
+      "ambiguous": [
+        {
+          "id": "database-migrations-ambiguous-migration-performance",
+          "request": "Add an index through a phased migration and prove both lock budgets and representative query-latency improvement.",
+          "expected_selected_skills": [
+            "database-migrations",
+            "performance-profiling"
+          ],
+          "expected_non_selected_skills": [
+            "release-engineering"
+          ],
+          "first_tools_or_evidence": [
+            "migration history and schema definitions",
+            "exact database engine and migration-tool documentation",
+            "bounded production-data shape evidence",
+            "benchmark configuration and representative workload",
+            "raw baseline measurements and environment fingerprint",
+            "official profiler documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "live DDL or traffic changes without target authority",
+            "unbounded backfills",
+            "generic SQL assumptions without exact version evidence",
+            "privilege escalation for profilers",
+            "single-run timing claims",
+            "discarding unfavorable observations"
+          ],
+          "completion_condition": "Compatibility phases, bounded backfill, exact lock/runtime budgets, rehearsal, invariants, and recovery evidence pass. Correctness, controlled raw repetitions, variability, profiles, budget verdict, and secondary metrics support the stated conclusion.",
+          "stop_condition": "Stop on drift, unknown engine version, unbudgeted locks or rewrites, non-idempotent backfills, failed invariants, or absent live authority. Stop or report inconclusive when correctness fails, environments differ, raw data is missing, variance overlaps the budget, or the workload is unrepresentative.",
+          "observed_selected_skills": [
+            "database-migrations",
+            "performance-profiling"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "database-migrations-ambiguous-migration-release",
+          "request": "Stage a release containing a compatible schema expansion and define the separate authorized database rollout.",
+          "expected_selected_skills": [
+            "release-engineering",
+            "database-migrations"
+          ],
+          "expected_non_selected_skills": [
+            "ci-workflows"
+          ],
+          "first_tools_or_evidence": [
+            "repository release instructions",
+            "version files, tags, and release configuration",
+            "official SLSA, SPDX, and Sigstore documentation",
+            "migration history and schema definitions",
+            "exact database engine and migration-tool documentation",
+            "bounded production-data shape evidence"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "publishing, signing, or remote mutation without exact authority",
+            "CI runner redesign unrelated to release evidence",
+            "live DDL or traffic changes without target authority",
+            "unbounded backfills",
+            "generic SQL assumptions without exact version evidence"
+          ],
+          "completion_condition": "The staged or published subjects, digests, SBOM, provenance, signatures, and independent verification all satisfy the declared release contract. Compatibility phases, bounded backfill, exact lock/runtime budgets, rehearsal, invariants, and recovery evidence pass.",
+          "stop_condition": "Stop on ambiguous source state, missing required evidence, mismatched subjects or identities, or absent publication authority. Stop on drift, unknown engine version, unbudgeted locks or rewrites, non-idempotent backfills, failed invariants, or absent live authority.",
+          "observed_selected_skills": [
+            "release-engineering",
+            "database-migrations"
+          ],
+          "result": "pass"
+        }
+      ]
+    },
+    "performance-profiling": {
+      "positive": [
+        {
+          "id": "performance-profiling-positive-cpu-profile",
+          "request": "Measure a CPU regression with pinned environments, raw repeated observations, and a sampling profile tied to a hypothesis.",
+          "expected_selected_skills": [
+            "performance-profiling"
+          ],
+          "expected_non_selected_skills": [
+            "test-and-regression",
+            "ci-workflows"
+          ],
+          "first_tools_or_evidence": [
+            "benchmark configuration and representative workload",
+            "raw baseline measurements and environment fingerprint",
+            "official profiler documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "privilege escalation for profilers",
+            "single-run timing claims",
+            "discarding unfavorable observations"
+          ],
+          "completion_condition": "Correctness, controlled raw repetitions, variability, profiles, budget verdict, and secondary metrics support the stated conclusion.",
+          "stop_condition": "Stop or report inconclusive when correctness fails, environments differ, raw data is missing, variance overlaps the budget, or the workload is unrepresentative.",
+          "observed_selected_skills": [
+            "performance-profiling"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "performance-profiling-positive-latency-gate",
+          "request": "Build a statistically defensible latency gate with warmups, interleaved repetitions, uncertainty, and a declared budget.",
+          "expected_selected_skills": [
+            "performance-profiling"
+          ],
+          "expected_non_selected_skills": [
+            "test-and-regression",
+            "database-migrations"
+          ],
+          "first_tools_or_evidence": [
+            "benchmark configuration and representative workload",
+            "raw baseline measurements and environment fingerprint",
+            "official profiler documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "privilege escalation for profilers",
+            "single-run timing claims",
+            "discarding unfavorable observations"
+          ],
+          "completion_condition": "Correctness, controlled raw repetitions, variability, profiles, budget verdict, and secondary metrics support the stated conclusion.",
+          "stop_condition": "Stop or report inconclusive when correctness fails, environments differ, raw data is missing, variance overlaps the budget, or the workload is unrepresentative.",
+          "observed_selected_skills": [
+            "performance-profiling"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "performance-profiling-positive-memory-profile",
+          "request": "Compare allocation and peak-memory behavior while proving functional equivalence and retaining every observation.",
+          "expected_selected_skills": [
+            "performance-profiling"
+          ],
+          "expected_non_selected_skills": [
+            "test-and-regression",
+            "wasm-component-engineering"
+          ],
+          "first_tools_or_evidence": [
+            "benchmark configuration and representative workload",
+            "raw baseline measurements and environment fingerprint",
+            "official profiler documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "privilege escalation for profilers",
+            "single-run timing claims",
+            "discarding unfavorable observations"
+          ],
+          "completion_condition": "Correctness, controlled raw repetitions, variability, profiles, budget verdict, and secondary metrics support the stated conclusion.",
+          "stop_condition": "Stop or report inconclusive when correctness fails, environments differ, raw data is missing, variance overlaps the budget, or the workload is unrepresentative.",
+          "observed_selected_skills": [
+            "performance-profiling"
+          ],
+          "result": "pass"
+        }
+      ],
+      "negative": [
+        {
+          "id": "performance-profiling-negative-functional-regression",
+          "request": "Create a deterministic functional regression test, fixture, oracle, and negative control with no timing claim.",
+          "expected_selected_skills": [
+            "test-and-regression"
+          ],
+          "expected_non_selected_skills": [
+            "performance-profiling"
+          ],
+          "first_tools_or_evidence": [
+            "repository test conventions and focused test source",
+            "smallest reproduction argv and captured failure signature",
+            "controlled fixtures and independent oracle"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "eval-based command execution",
+            "retries presented as a green required gate",
+            "unrequested product fixes"
+          ],
+          "completion_condition": "The failure is reproduced for the intended reason and the oracle, fixtures, controls, repeat evidence, and applicable wider tests are recorded.",
+          "stop_condition": "Stop when the defect is not reproduced, controls fail for the wrong reason, signatures differ, fixtures leak state, or routine verification is the entire request.",
+          "observed_selected_skills": [
+            "test-and-regression"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "performance-profiling-negative-migration-budget",
+          "request": "Plan a schema migration's lock duration, bounded backfill, recovery, and rollout invariants.",
+          "expected_selected_skills": [
+            "database-migrations"
+          ],
+          "expected_non_selected_skills": [
+            "performance-profiling"
+          ],
+          "first_tools_or_evidence": [
+            "migration history and schema definitions",
+            "exact database engine and migration-tool documentation",
+            "bounded production-data shape evidence"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "live DDL or traffic changes without target authority",
+            "unbounded backfills",
+            "generic SQL assumptions without exact version evidence"
+          ],
+          "completion_condition": "Compatibility phases, bounded backfill, exact lock/runtime budgets, rehearsal, invariants, and recovery evidence pass.",
+          "stop_condition": "Stop on drift, unknown engine version, unbudgeted locks or rewrites, non-idempotent backfills, failed invariants, or absent live authority.",
+          "observed_selected_skills": [
+            "database-migrations"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "performance-profiling-negative-routine-tests",
+          "request": "Complete a small refactor with the repository's proportionate normal verification and ordinary unit tests; no failure reproduction, new oracle, benchmark, or performance claim is requested.",
+          "expected_selected_skills": [
+            "none (repository normal verification workflow)"
+          ],
+          "expected_non_selected_skills": [
+            "performance-profiling"
+          ],
+          "first_tools_or_evidence": [
+            "repository instructions and normal verification commands",
+            "focused implementation diff"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "new regression-framework design",
+            "routine retries that hide failures"
+          ],
+          "completion_condition": "The repository's proportionate normal verification passes and its scope and residual risk are reported.",
+          "stop_condition": "Stop if the normal checks fail or the requested work expands into failure reproduction, oracle design, or performance measurement.",
+          "observed_selected_skills": [
+            "none (repository normal verification workflow)"
+          ],
+          "result": "pass"
+        }
+      ],
+      "ambiguous": [
+        {
+          "id": "performance-profiling-ambiguous-correctness-benchmark",
+          "request": "An optimization needs a negative-control fixture and independent functional regression oracle, followed by controlled repeated latency measurements and a statistical budget verdict.",
+          "expected_selected_skills": [
+            "test-and-regression",
+            "performance-profiling"
+          ],
+          "expected_non_selected_skills": [
+            "ci-workflows"
+          ],
+          "first_tools_or_evidence": [
+            "repository test conventions and focused test source",
+            "smallest reproduction argv and captured failure signature",
+            "controlled fixtures and independent oracle",
+            "benchmark configuration and representative workload",
+            "raw baseline measurements and environment fingerprint",
+            "official profiler documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "eval-based command execution",
+            "retries presented as a green required gate",
+            "unrequested product fixes",
+            "privilege escalation for profilers",
+            "single-run timing claims",
+            "discarding unfavorable observations"
+          ],
+          "completion_condition": "The failure is reproduced for the intended reason and the oracle, fixtures, controls, repeat evidence, and applicable wider tests are recorded. Correctness, controlled raw repetitions, variability, profiles, budget verdict, and secondary metrics support the stated conclusion.",
+          "stop_condition": "Stop when the defect is not reproduced, controls fail for the wrong reason, signatures differ, fixtures leak state, or routine verification is the entire request. Stop or report inconclusive when correctness fails, environments differ, raw data is missing, variance overlaps the budget, or the workload is unrepresentative.",
+          "observed_selected_skills": [
+            "test-and-regression",
+            "performance-profiling"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "performance-profiling-ambiguous-query-migration",
+          "request": "Introduce an index by migration while measuring query latency, write overhead, lock time, and rollout safety.",
+          "expected_selected_skills": [
+            "database-migrations",
+            "performance-profiling"
+          ],
+          "expected_non_selected_skills": [
+            "release-engineering"
+          ],
+          "first_tools_or_evidence": [
+            "migration history and schema definitions",
+            "exact database engine and migration-tool documentation",
+            "bounded production-data shape evidence",
+            "benchmark configuration and representative workload",
+            "raw baseline measurements and environment fingerprint",
+            "official profiler documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "live DDL or traffic changes without target authority",
+            "unbounded backfills",
+            "generic SQL assumptions without exact version evidence",
+            "privilege escalation for profilers",
+            "single-run timing claims",
+            "discarding unfavorable observations"
+          ],
+          "completion_condition": "Compatibility phases, bounded backfill, exact lock/runtime budgets, rehearsal, invariants, and recovery evidence pass. Correctness, controlled raw repetitions, variability, profiles, budget verdict, and secondary metrics support the stated conclusion.",
+          "stop_condition": "Stop on drift, unknown engine version, unbudgeted locks or rewrites, non-idempotent backfills, failed invariants, or absent live authority. Stop or report inconclusive when correctness fails, environments differ, raw data is missing, variance overlaps the budget, or the workload is unrepresentative.",
+          "observed_selected_skills": [
+            "database-migrations",
+            "performance-profiling"
+          ],
+          "result": "pass"
+        }
+      ]
+    },
+    "wasm-component-engineering": {
+      "positive": [
+        {
+          "id": "wasm-component-engineering-positive-wit-contract",
+          "request": "Evolve a WIT package and world, regenerate bindings, and classify compatibility for old component consumers.",
+          "expected_selected_skills": [
+            "wasm-component-engineering"
+          ],
+          "expected_non_selected_skills": [
+            "release-engineering",
+            "dependency-maintenance"
+          ],
+          "first_tools_or_evidence": [
+            "WIT files, component manifests, and generated bindings",
+            "pinned wasm-tools and runtime versions",
+            "extracted WIT, import/export, and capability evidence"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "ambient capability inheritance for convenience",
+            "general release signing or publication",
+            "silent WASI retargeting"
+          ],
+          "completion_condition": "Structural validation, extracted WIT, compatibility, composition, minimum capabilities, and denied-capability tests pass.",
+          "stop_condition": "Stop on ambiguous model/WASI generation, stale bindings, incompatible WIT, unexpected imports, ambient authority, or missing component evidence.",
+          "observed_selected_skills": [
+            "wasm-component-engineering"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "wasm-component-engineering-positive-composition",
+          "request": "Compose components, re-extract WIT, and verify exact remaining imports and exported interfaces.",
+          "expected_selected_skills": [
+            "wasm-component-engineering"
+          ],
+          "expected_non_selected_skills": [
+            "release-engineering",
+            "performance-profiling"
+          ],
+          "first_tools_or_evidence": [
+            "WIT files, component manifests, and generated bindings",
+            "pinned wasm-tools and runtime versions",
+            "extracted WIT, import/export, and capability evidence"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "ambient capability inheritance for convenience",
+            "general release signing or publication",
+            "silent WASI retargeting"
+          ],
+          "completion_condition": "Structural validation, extracted WIT, compatibility, composition, minimum capabilities, and denied-capability tests pass.",
+          "stop_condition": "Stop on ambiguous model/WASI generation, stale bindings, incompatible WIT, unexpected imports, ambient authority, or missing component evidence.",
+          "observed_selected_skills": [
+            "wasm-component-engineering"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "wasm-component-engineering-positive-capability-gates",
+          "request": "Run a WASIp2 component with minimum host grants and negative tests for denied filesystem and network capabilities.",
+          "expected_selected_skills": [
+            "wasm-component-engineering"
+          ],
+          "expected_non_selected_skills": [
+            "release-engineering",
+            "ci-workflows"
+          ],
+          "first_tools_or_evidence": [
+            "WIT files, component manifests, and generated bindings",
+            "pinned wasm-tools and runtime versions",
+            "extracted WIT, import/export, and capability evidence"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "ambient capability inheritance for convenience",
+            "general release signing or publication",
+            "silent WASI retargeting"
+          ],
+          "completion_condition": "Structural validation, extracted WIT, compatibility, composition, minimum capabilities, and denied-capability tests pass.",
+          "stop_condition": "Stop on ambiguous model/WASI generation, stale bindings, incompatible WIT, unexpected imports, ambient authority, or missing component evidence.",
+          "observed_selected_skills": [
+            "wasm-component-engineering"
+          ],
+          "result": "pass"
+        }
+      ],
+      "negative": [
+        {
+          "id": "wasm-component-engineering-negative-general-release",
+          "request": "Generate the general SBOM and SLSA provenance, sign artifacts, and publish an already verified component.",
+          "expected_selected_skills": [
+            "release-engineering"
+          ],
+          "expected_non_selected_skills": [
+            "wasm-component-engineering"
+          ],
+          "first_tools_or_evidence": [
+            "repository release instructions",
+            "version files, tags, and release configuration",
+            "official SLSA, SPDX, and Sigstore documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "publishing, signing, or remote mutation without exact authority",
+            "CI runner redesign unrelated to release evidence"
+          ],
+          "completion_condition": "The staged or published subjects, digests, SBOM, provenance, signatures, and independent verification all satisfy the declared release contract.",
+          "stop_condition": "Stop on ambiguous source state, missing required evidence, mismatched subjects or identities, or absent publication authority.",
+          "observed_selected_skills": [
+            "release-engineering"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "wasm-component-engineering-negative-dependency-security",
+          "request": "Choose a minimal security update for ordinary package dependencies and update the resolver lockfile.",
+          "expected_selected_skills": [
+            "dependency-maintenance"
+          ],
+          "expected_non_selected_skills": [
+            "wasm-component-engineering"
+          ],
+          "first_tools_or_evidence": [
+            "manifests, lockfiles, and resolver pins",
+            "authoritative advisories and upstream migration notes",
+            "post-resolution dependency graph"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "broad update-all operations without rationale",
+            "release publication",
+            "hand editing resolver-owned lock data"
+          ],
+          "completion_condition": "The minimal graph diff is explained and immutable resolution, build/tests, and post-update scans satisfy policy.",
+          "stop_condition": "Stop on stale or uncertain advisory data, unexplained graph churn, integrity/source changes, incompatible licenses, or unavailable required resolution evidence.",
+          "observed_selected_skills": [
+            "dependency-maintenance"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "wasm-component-engineering-negative-core-wasm-speed",
+          "request": "Profile and optimize arbitrary core-WebAssembly execution speed without WIT, components, or WASI capability work.",
+          "expected_selected_skills": [
+            "performance-profiling"
+          ],
+          "expected_non_selected_skills": [
+            "wasm-component-engineering"
+          ],
+          "first_tools_or_evidence": [
+            "benchmark configuration and representative workload",
+            "raw baseline measurements and environment fingerprint",
+            "official profiler documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "privilege escalation for profilers",
+            "single-run timing claims",
+            "discarding unfavorable observations"
+          ],
+          "completion_condition": "Correctness, controlled raw repetitions, variability, profiles, budget verdict, and secondary metrics support the stated conclusion.",
+          "stop_condition": "Stop or report inconclusive when correctness fails, environments differ, raw data is missing, variance overlaps the budget, or the workload is unrepresentative.",
+          "observed_selected_skills": [
+            "performance-profiling"
+          ],
+          "result": "pass"
+        }
+      ],
+      "ambiguous": [
+        {
+          "id": "wasm-component-engineering-ambiguous-component-dependency",
+          "request": "Update a component dependency and verify both lockfile integrity and WIT/import compatibility with existing hosts.",
+          "expected_selected_skills": [
+            "dependency-maintenance",
+            "wasm-component-engineering"
+          ],
+          "expected_non_selected_skills": [
+            "release-engineering"
+          ],
+          "first_tools_or_evidence": [
+            "manifests, lockfiles, and resolver pins",
+            "authoritative advisories and upstream migration notes",
+            "post-resolution dependency graph",
+            "WIT files, component manifests, and generated bindings",
+            "pinned wasm-tools and runtime versions",
+            "extracted WIT, import/export, and capability evidence"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "broad update-all operations without rationale",
+            "release publication",
+            "hand editing resolver-owned lock data",
+            "ambient capability inheritance for convenience",
+            "general release signing or publication",
+            "silent WASI retargeting"
+          ],
+          "completion_condition": "The minimal graph diff is explained and immutable resolution, build/tests, and post-update scans satisfy policy. Structural validation, extracted WIT, compatibility, composition, minimum capabilities, and denied-capability tests pass.",
+          "stop_condition": "Stop on stale or uncertain advisory data, unexplained graph churn, integrity/source changes, incompatible licenses, or unavailable required resolution evidence. Stop on ambiguous model/WASI generation, stale bindings, incompatible WIT, unexpected imports, ambient authority, or missing component evidence.",
+          "observed_selected_skills": [
+            "dependency-maintenance",
+            "wasm-component-engineering"
+          ],
+          "result": "pass"
+        },
+        {
+          "id": "wasm-component-engineering-ambiguous-component-provenance",
+          "request": "Validate a component's WIT and capability policy, then stage its SBOM, provenance, signature, and publication bundle.",
+          "expected_selected_skills": [
+            "wasm-component-engineering",
+            "release-engineering"
+          ],
+          "expected_non_selected_skills": [
+            "performance-profiling"
+          ],
+          "first_tools_or_evidence": [
+            "WIT files, component manifests, and generated bindings",
+            "pinned wasm-tools and runtime versions",
+            "extracted WIT, import/export, and capability evidence",
+            "repository release instructions",
+            "version files, tags, and release configuration",
+            "official SLSA, SPDX, and Sigstore documentation"
+          ],
+          "unnecessary_or_forbidden_tools": [
+            "ambient capability inheritance for convenience",
+            "general release signing or publication",
+            "silent WASI retargeting",
+            "publishing, signing, or remote mutation without exact authority",
+            "CI runner redesign unrelated to release evidence"
+          ],
+          "completion_condition": "Structural validation, extracted WIT, compatibility, composition, minimum capabilities, and denied-capability tests pass. The staged or published subjects, digests, SBOM, provenance, signatures, and independent verification all satisfy the declared release contract.",
+          "stop_condition": "Stop on ambiguous model/WASI generation, stale bindings, incompatible WIT, unexpected imports, ambient authority, or missing component evidence. Stop on ambiguous source state, missing required evidence, mismatched subjects or identities, or absent publication authority.",
+          "observed_selected_skills": [
+            "wasm-component-engineering",
+            "release-engineering"
+          ],
+          "result": "pass"
+        }
+      ]
+    }
+  },
+  "execution": {
+    "date_utc": "2026-08-28",
+    "method": "Run all prompts through skills.search_many with eight candidates, then apply the final SKILL.md trigger and boundary text to select or reject candidates.",
+    "query_count": 56,
+    "positive_cases": 21,
+    "negative_cases": 21,
+    "ambiguous_cases": 14,
+    "specialized_candidate_cases_retrieved": 54,
+    "specialized_candidate_cases_expected": 54,
+    "semantically_reviewed_cases": 56,
+    "passed_cases": 56,
+    "result": "pass",
+    "notes": [
+      "Candidate retrieval surfaced every expected public specialized skill after two ambiguous prompts were made more explicit about both requested responsibilities.",
+      "The two routine-verification negatives intentionally select no specialized public skill; test-and-regression may be retrieved by its name, but its final description explicitly rejects routine test execution after ordinary changes.",
+      "Ambiguous cases select both skills only when the request contains substantive work owned by both; otherwise the neighboring skill is explicitly non-selected."
+    ]
+  }
+}

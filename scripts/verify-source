@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+
+python3 scripts/validate_catalog.py
+sh -n skills/test-and-regression/scripts/regression-gate.sh
+python3 -m unittest discover -s tests -v
