@@ -3,14 +3,21 @@ name: test-and-regression
 description: Reproduce failures and create deterministic regression tests, fixtures, baselines, oracles, and flaky-test diagnoses with executable pass/fail gates. Use for test behavior; not for CI pipeline topology or implementing unrelated fixes.
 ---
 
----
-name: test-and-regression
-description: Reproduce failures and create deterministic regression tests, fixtures, baselines, oracles, and flaky-test diagnoses with executable pass/fail gates. Use for test behavior; not for CI pipeline topology or implementing unrelated fixes.
----
-
 # Test and Regression
 
 Turn a reported defect or unstable signal into a reproducible, falsifiable test contract. Keep failure reproduction, test design, and implementation repair distinct so a passing test cannot merely encode the current behavior.
+
+## Route before loading context
+
+Select this skill for failure reproduction or minimization, regression-test and baseline design, independent pass/fail oracles, controlled fixtures, negative and positive controls, or flaky-test diagnosis. Decline it for a single straightforward assertion explanation that does not need broader test design, and for merely choosing or running checks after an implementation change; `verified-change` owns the latter.
+
+Route ownership explicitly at neighboring boundaries:
+
+- `ci-workflows` owns runner scheduling, matrices, permissions, caches, and pipeline aggregation. When a test flakes only on one runner, use this skill for the reproducer, controlled environment, oracle, and fixture, and co-route CI-specific scheduling or runner changes to `ci-workflows`.
+- `performance-profiling` owns repeated latency, throughput, allocation, and statistical regression measurement. For an optimization, use this skill only for the functional correctness oracle and co-route the measurement gate to `performance-profiling`.
+- Dependency selection and product repair stay separate unless the request explicitly includes them.
+
+Start with repository instructions, existing test conventions, focused source/test reads, and the smallest executable test command. Load framework documentation only when pinned version behavior affects fixtures, concurrency, or result interpretation. Stop rather than broaden scope when the requested work belongs entirely to a neighboring skill.
 
 ## Inputs and outputs
 
