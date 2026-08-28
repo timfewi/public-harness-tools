@@ -1,0 +1,4 @@
+interface:
+  display_name: "Database Migrations"
+  short_description: "Plan and verify recoverable database migrations"
+  default_prompt: "Use $database-migrations to plan and verify this database migration."
