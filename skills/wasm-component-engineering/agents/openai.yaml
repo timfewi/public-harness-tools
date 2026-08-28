@@ -1,0 +1,4 @@
+interface:
+  display_name: "WASM Component Engineering"
+  short_description: "Build and verify capability-safe WASM components"
+  default_prompt: "Use $wasm-component-engineering to build and verify this WebAssembly component."
