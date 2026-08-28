@@ -1,0 +1,4 @@
+interface:
+  display_name: "Performance Profiling"
+  short_description: "Measure and gate software performance changes"
+  default_prompt: "Use $performance-profiling to measure and diagnose this performance change."
