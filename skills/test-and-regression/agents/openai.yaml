@@ -1,0 +1,4 @@
+interface:
+  display_name: "Test and Regression"
+  short_description: "Reproduce failures and build durable regression gates"
+  default_prompt: "Use $test-and-regression to reproduce this failure and design its regression gate."

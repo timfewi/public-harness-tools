@@ -1,6 +1,6 @@
 ---
 name: test-and-regression
-description: Reproduce failures and create deterministic regression tests, fixtures, baselines, oracles, and flaky-test diagnoses with executable pass/fail gates. Use for test behavior; not for CI pipeline topology or implementing unrelated fixes.
+description: Reproduce failures and design regression tests, fixtures, baselines, oracles, negative controls, flaky-test diagnoses, and reusable regression gates. Use for failure reproduction and test-design work, including CI-only flakes; not for routine test execution after ordinary changes, CI pipeline topology, or product fixes.
 ---
 
 # Test and Regression
@@ -9,7 +9,7 @@ Turn a reported defect or unstable signal into a reproducible, falsifiable test 
 
 ## Route before loading context
 
-Select this skill for failure reproduction or minimization, regression-test and baseline design, independent pass/fail oracles, controlled fixtures, negative and positive controls, or flaky-test diagnosis. Decline it for a single straightforward assertion explanation that does not need broader test design, and for merely choosing or running checks after an implementation change; `verified-change` owns the latter.
+Select this skill for failure reproduction or minimization, regression-test and baseline design, independent pass/fail oracles, controlled fixtures, negative and positive controls, or flaky-test diagnosis. Decline it for a single straightforward assertion explanation that does not need broader test design, and for merely choosing or running checks after an implementation change; the repository's normal verification workflow owns the latter.
 
 Route ownership explicitly at neighboring boundaries:
 
@@ -47,57 +47,23 @@ Do not implement the product fix unless the request includes it.
 8. For flakiness, form hypotheses from the evidence: order leakage, incomplete teardown, clock/timing, seed/randomness, port/filesystem collision, thread/process lifetime, resource exhaustion, or external service variance. Change one variable per experiment and report pass/fail counts; do not quarantine or add retries unless the user requests a temporary mitigation.
 9. State exactly what the test proves and what it does not. A passing focused test does not prove the full suite, other platforms, or absence of related regressions.
 
-## Executable reusable gate
+## Bundled regression gate
 
-When the repository lacks an equivalent repeat gate, materialize this as a temporary helper or a maintained script when requested. It accepts argv directly and keeps one log per run.
+When the repository lacks an equivalent repeat gate, run the bundled `scripts/regression-gate.sh` with argv after `--`; it never uses `eval`:
 
 ~~~sh
-#!/bin/sh
-set -eu
-
-if [ "$#" -lt 4 ]; then
-  echo "usage: regression-gate.sh pass|fail|flake RUNS ARTIFACT_DIR -- COMMAND [ARG ...]" >&2
-  exit 64
-fi
-
-mode=$1
-runs=$2
-artifact_dir=$3
-shift 3
-if [ "${1:-}" != "--" ]; then
-  echo "missing -- before command" >&2
-  exit 64
-fi
-shift
-case "$mode" in pass|fail|flake) ;; *) echo "invalid mode" >&2; exit 64 ;; esac
-case "$runs" in ''|*[!0-9]*) echo "RUNS must be a positive integer" >&2; exit 64 ;; esac
-if [ "$runs" -eq 0 ] || [ "$#" -eq 0 ]; then
-  echo "RUNS and COMMAND must be non-empty" >&2
-  exit 64
-fi
-
-mkdir -p "$artifact_dir"
-pass_count=0
-fail_count=0
-i=1
-while [ "$i" -le "$runs" ]; do
-  if "$@" >"$artifact_dir/run-$i.log" 2>&1; then
-    pass_count=$((pass_count + 1))
-  else
-    fail_count=$((fail_count + 1))
-  fi
-  i=$((i + 1))
-done
-printf 'runs=%s pass=%s fail=%s\n' "$runs" "$pass_count" "$fail_count"
-
-case "$mode" in
-  pass)  [ "$fail_count" -eq 0 ] ;;
-  fail)  [ "$pass_count" -eq 0 ] ;;
-  flake) [ "$pass_count" -gt 0 ] && [ "$fail_count" -gt 0 ] ;;
-esac
+skills/test-and-regression/scripts/regression-gate.sh pass 10 artifacts/regression-positive -- project-test focused-case
+skills/test-and-regression/scripts/regression-gate.sh fail 5 artifacts/regression-negative --expect 'expected error code' -- project-test negative-control
+skills/test-and-regression/scripts/regression-gate.sh flake 20 artifacts/flake-evidence --expect 'intermittent signature' -- project-test unstable-case
 ~~~
 
-Use fail mode for a deterministic negative control, pass mode for the repaired behavior, and flake mode only to demonstrate mixed outcomes. Also inspect logs for the expected signature; exit status alone cannot prove the same failure occurred.
+The mode is an expected classification:
+
+- `pass` succeeds only when every run passes.
+- `fail` succeeds only when every run fails and, when `--expect` is supplied, every failure log contains that fixed signature.
+- `flake` succeeds only when both pass and fail outcomes occur and every failure has the requested signature. This is diagnostic evidence of instability, never a green required product gate.
+
+`RUNS` must be between 1 and 1000. `ARTIFACT_DIR` must be a new dedicated directory whose parent already exists; the runner rejects dot traversal, symbolic-link parents, and existing output paths. It preserves the command argv exactly in NUL-delimited `command.argv0`, writes one log and exit-status file per run, and records all-pass, all-fail, or mixed classification in `summary.txt`. In pass mode, any nonzero run keeps the gate nonzero; retries never convert required success into green. Review the preserved logs and signature result before accepting a gate.
 
 ## Gates
 
