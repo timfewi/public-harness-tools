@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "checks": [
+    {
+      "name": "catalog",
+      "argv": ["python3", "scripts/validate_catalog.py"],
+      "requires": ["python3"],
+      "timeout_seconds": 120,
+      "profiles": ["fast"]
+    },
+    {
+      "name": "regression-gate-syntax",
+      "argv": ["sh", "-n", "skills/test-and-regression/scripts/regression-gate.sh"],
+      "requires": ["sh"],
+      "timeout_seconds": 60,
+      "profiles": ["fast"]
+    },
+    {
+      "name": "tests",
+      "argv": ["python3", "-m", "unittest", "discover", "-s", "tests", "-v"],
+      "requires": ["python3"],
+      "timeout_seconds": 300,
+      "profiles": ["fast"]
+    }
+  ],
+  "watch_ignore": [".direnv", "result", "__pycache__"]
+}
