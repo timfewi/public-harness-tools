@@ -1,0 +1,25 @@
+set shell := ["sh", "-eu", "-c"]
+
+# List available commands.
+default:
+    @just --list
+
+# Evaluate and run all flake checks.
+check:
+    nix flake check
+
+# Format the Nix tree (writes changes; leaves flake.lock untouched).
+fmt:
+    nix fmt --no-write-lock-file
+
+# Check Nix formatting without writing changes.
+fmt-check:
+    nix fmt --no-write-lock-file -- --ci
+
+# Enter one tool-group shell, for example `just dev rust` or `just dev lsp`.
+dev group="agent":
+    nix develop .#{{ group }}
+
+# Print the materialized environment for the default agent set.
+env:
+    nix build --no-link --print-out-paths .#agent-toolbox

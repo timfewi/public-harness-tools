@@ -1,0 +1,84 @@
+{
+  "version": 1,
+  "comment": "Reviewed policy for scripts/export_public_tools.py. Replacements run first, then the forbidden scan must find nothing. Keep every entry justified; the exporter refuses to publish otherwise.",
+  "replacements": [
+    {
+      "pattern": "git\\+ssh://git@github\\.com/",
+      "replacement": "git+https://github.com/",
+      "reason": "Anonymous HTTPS flake input instead of a private SSH remote"
+    },
+    {
+      "pattern": "git@github\\.com:",
+      "replacement": "https://github.com/",
+      "reason": "Anonymous HTTPS URL instead of an SSH clone command"
+    },
+    {
+      "pattern": "/home/tim(?=/|\\b)",
+      "replacement": "/home/user",
+      "reason": "Operator home path in fixtures"
+    },
+    {
+      "pattern": "in the `memorycrime-nixos` toolchain",
+      "replacement": "in an earlier private host toolchain",
+      "reason": "Private host repository name"
+    },
+    {
+      "pattern": "tailscale-infra",
+      "replacement": "secrets",
+      "reason": "Private infrastructure repository name used as an example"
+    }
+  ],
+  "forbidden": [
+    {
+      "pattern": "memorycrime",
+      "reason": "Private project name"
+    },
+    {
+      "pattern": "tailscale-infra",
+      "reason": "Private infrastructure repository name"
+    },
+    {
+      "pattern": "skills-library",
+      "reason": "Private catalog repository name"
+    },
+    {
+      "pattern": "nixos-host",
+      "reason": "Private host repository name"
+    },
+    {
+      "pattern": "tentaflake-private",
+      "reason": "Private infrastructure repository name"
+    },
+    {
+      "pattern": "law-vault",
+      "reason": "Private legal corpus repository name"
+    },
+    {
+      "pattern": "throne",
+      "reason": "Private platform name"
+    },
+    {
+      "pattern": "netcup",
+      "reason": "Private hosting provider detail"
+    },
+    {
+      "pattern": "\\.ts\\.net",
+      "reason": "Private Tailnet hostname"
+    },
+    {
+      "pattern": "/home/tim(?=/|\\b)",
+      "reason": "Operator home path"
+    },
+    {
+      "pattern": "/Users/tim(?=/|\\b)",
+      "reason": "Operator home path"
+    }
+  ],
+  "allowed_emails": [
+    "example.com",
+    "example.org",
+    "example.net",
+    "users.noreply.github.com",
+    "timwitter.com"
+  ]
+}

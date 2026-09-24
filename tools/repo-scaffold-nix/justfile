@@ -1,0 +1,17 @@
+set shell := ["sh", "-eu", "-c"]
+
+# List available commands.
+default:
+    @just --list
+
+# Run all flake checks.
+check:
+    nix flake check
+
+# Run the scaffolder unit tests directly.
+test:
+    PROJECT_SCAFFOLD_TEMPLATES="$PWD/templates" python3 -m unittest discover -s tests -t . -p 'test_*.py' -v
+
+# Format the Nix tree.
+fmt:
+    nix fmt --no-write-lock-file

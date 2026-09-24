@@ -1,0 +1,6 @@
+/result*
+/.direnv/
+/.cache/
+__pycache__/
+*.pyc
+.ast-index/

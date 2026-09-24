@@ -1,0 +1,33 @@
+{
+  "schema": "public-tool-mirror.v1",
+  "tools": [
+    {
+      "digest": "sha256:1cdb31aa08185fcd62595e7943ef5cd2f19199eae8d66d67bd89b344a76eb85b",
+      "files": 21,
+      "name": "agent-toolbox-nix",
+      "revision": "e48e8f6dcc46d983b946dedf4ab2180e4050bc3a",
+      "upstream": "timfewi/agent-toolbox-nix"
+    },
+    {
+      "digest": "sha256:5b8acebdeafeb529c7f16fc3ce3d410b69bfebd69ba638950d3c2f0e5b1f1827",
+      "files": 32,
+      "name": "ast-index-nix",
+      "revision": "e85f6a2c520f3c2b1bc72e9580b8265935332867",
+      "upstream": "timfewi/ast-index-nix"
+    },
+    {
+      "digest": "sha256:794ad49717670c5b10109515341b44892ee3781198f719bbed7f25c4a4186729",
+      "files": 21,
+      "name": "project-check-nix",
+      "revision": "1b58cc84750f159d304887c067220d15f8b0decb",
+      "upstream": "timfewi/project-check-nix"
+    },
+    {
+      "digest": "sha256:aa7ea88aa186939eb3da8942ba47dd73a02a714eeb1d4e27905baa2365f10f5a",
+      "files": 42,
+      "name": "repo-scaffold-nix",
+      "revision": "1129ddf3430d1a5a4df8d575c6eb4ed43db18c31",
+      "upstream": "timfewi/repo-scaffold-nix"
+    }
+  ]
+}

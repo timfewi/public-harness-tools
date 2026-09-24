@@ -1,0 +1,8 @@
+{
+  "preview": {
+    "command": ["bun", "run", "dev"],
+    "url": "http://localhost:5173/",
+    "readyTimeoutMs": 60000
+  },
+  "routes": [{ "path": "/" }]
+}

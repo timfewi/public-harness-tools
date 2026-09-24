@@ -21,6 +21,13 @@
       "requires": ["python3"],
       "timeout_seconds": 300,
       "profiles": ["fast"]
+    },
+    {
+      "name": "public-tools",
+      "argv": ["python3", "scripts/export_public_tools.py", "--verify"],
+      "requires": ["python3", "git"],
+      "timeout_seconds": 120,
+      "profiles": ["fast"]
     }
   ],
   "watch_ignore": [".direnv", "result", "__pycache__"]

@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "checks": [{
+    "name": "project-check-fast",
+    "argv": ["bash", "scripts/check", "fast"],
+    "requires": ["bash", "nix", "realpath"],
+    "timeout_seconds": 1800,
+    "profiles": ["fast"]
+  }]
+}
