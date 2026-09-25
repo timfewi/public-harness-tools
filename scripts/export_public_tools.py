@@ -169,6 +169,27 @@ def sanitize(data: bytes, replacements: list[dict]) -> bytes:
     return text.encode("utf-8")
 
 
+def policy_labels(value: str, rules: dict) -> list[str]:
+    """Check non-file metadata and mirror names without echoing matched values."""
+    raw = os.fsencode(value)
+    labels = [
+        f"forbidden content: {entry['reason']}"
+        for entry in rules.get("forbidden", [])
+        if re.search(entry["pattern"].encode(), raw, re.IGNORECASE)
+    ]
+    labels.extend(
+        f"credential pattern: {label}"
+        for label, pattern in credential_rules().items()
+        if re.search(pattern, raw)
+    )
+    allowed = tuple(domain.lower() for domain in rules.get("allowed_emails", []))
+    for match in EMAIL_RE.finditer(raw):
+        domain = match.group(0).rsplit(b"@", 1)[1].decode("ascii", "replace").lower()
+        if not any(domain == item or domain.endswith("." + item) for item in allowed):
+            labels.append("unexpected email domain")
+    return labels
+
+
 def scan_tree(root: Path, rules: dict) -> list[tuple[str, str, int | None]]:
     findings: list[tuple[str, str, int | None]] = []
     forbidden = [
@@ -178,11 +199,34 @@ def scan_tree(root: Path, rules: dict) -> list[tuple[str, str, int | None]]:
     credentials = [
         (re.compile(pattern), label) for label, pattern in credential_rules().items()
     ]
-    allowed_emails = tuple(rules.get("allowed_emails", []))
+    allowed_emails = tuple(domain.lower() for domain in rules.get("allowed_emails", []))
+    if root.is_symlink():
+        return [(".", "symlink in mirror", None)]
     for path in sorted(root.rglob("*")):
-        if not path.is_file() or path.is_symlink():
-            continue
         relative = path.relative_to(root).as_posix()
+        relative_bytes = os.fsencode(relative)
+        for pattern, reason in forbidden:
+            if pattern.search(relative_bytes):
+                findings.append((relative, f"forbidden path: {reason}", None))
+        for pattern, label in credentials:
+            if pattern.search(relative_bytes):
+                findings.append((relative, f"credential pattern in path: {label}", None))
+        for match in EMAIL_RE.finditer(relative_bytes):
+            domain = match.group(0).rsplit(b"@", 1)[1].decode("ascii", "replace")
+            normalized_domain = domain.lower()
+            if not any(
+                normalized_domain == allowed
+                or normalized_domain.endswith("." + allowed)
+                for allowed in allowed_emails
+            ):
+                findings.append(
+                    (relative, f"unexpected email domain in path: {domain}", None)
+                )
+        if path.is_symlink():
+            findings.append((relative, "symlink in mirror", None))
+            continue
+        if not path.is_file():
+            continue
         raw = path.read_bytes()
         if len(raw) > MAX_FILE_BYTES:
             findings.append((relative, "file exceeds the mirror size limit", None))
@@ -196,15 +240,24 @@ def scan_tree(root: Path, rules: dict) -> list[tuple[str, str, int | None]]:
                 findings.append((relative, f"credential pattern: {label}", line))
         for match in EMAIL_RE.finditer(raw):
             domain = match.group(0).rsplit(b"@", 1)[1].decode("ascii", "replace")
-            if not domain.lower().endswith(allowed_emails):
+            normalized_domain = domain.lower()
+            if not any(
+                normalized_domain == allowed
+                or normalized_domain.endswith("." + allowed)
+                for allowed in allowed_emails
+            ):
                 line = raw.count(b"\n", 0, match.start()) + 1
                 findings.append((relative, f"unexpected email domain: {domain}", line))
     return findings
 
 
 def tree_digest(root: Path) -> str:
+    if root.is_symlink():
+        raise ValueError(f"symlink in mirror: {root}")
     digest = hashlib.sha256()
     for path in sorted(root.rglob("*")):
+        if path.is_symlink():
+            raise ValueError(f"symlink in mirror: {path}")
         if not path.is_file():
             continue
         relative = path.relative_to(root).as_posix()
@@ -216,6 +269,8 @@ def tree_digest(root: Path) -> str:
 def write_mirror(source: Path, name: str, dest: Path, rules: dict) -> tuple[dict, Path]:
     if not NAME_RE.match(name):
         raise ValueError(f"invalid mirror name: {name!r}")
+    if labels := policy_labels(name, rules):
+        raise ValueError(f"mirror name violates policy: {', '.join(labels)}")
     revision = run_git(source, "rev-parse", "HEAD").decode().strip()
     files = tracked_files(source)
     if not files:
@@ -235,9 +290,12 @@ def write_mirror(source: Path, name: str, dest: Path, rules: dict) -> tuple[dict
                 for path, label, line in findings
             )
             raise ValueError(f"mirror verification failed:\n{report}")
+        upstream = repository_name(source, name)
+        if labels := policy_labels(upstream, rules):
+            raise ValueError(f"upstream violates policy: {', '.join(labels)}")
         return {
             "name": name,
-            "upstream": repository_name(source, name),
+            "upstream": upstream,
             "revision": revision,
             "files": len(files),
             "digest": f"sha256:{tree_digest(staging)}",
@@ -299,31 +357,95 @@ def refresh_manifest(dest: Path, entry: dict | None) -> None:
 
 def verify_mirrors(dest: Path, rules: dict) -> list[str]:
     manifest_path = dest / "manifest.json"
+    if manifest_path.is_symlink():
+        return [f"symlinked manifest: {manifest_path}"]
     if not manifest_path.is_file():
         return [f"missing manifest: {manifest_path}"]
-    document = json.loads(manifest_path.read_text(encoding="utf-8"))
-    if document.get("schema") != MANIFEST_SCHEMA:
+    try:
+        document = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (UnicodeError, json.JSONDecodeError) as error:
+        return [f"invalid manifest in {manifest_path}: {error}"]
+    if not isinstance(document, dict) or document.get("schema") != MANIFEST_SCHEMA:
         return [f"unsupported manifest schema in {manifest_path}"]
     problems: list[str] = []
-    entries = {tool["name"]: tool for tool in document["tools"]}
-    directories = sorted(
-        directory
-        for directory in dest.iterdir()
-        if directory.is_dir() and not directory.name.startswith(".")
-    )
+    if set(document) != {"schema", "tools"}:
+        problems.append("unexpected manifest fields")
+    if not isinstance(document.get("tools"), list):
+        return [f"invalid tools list in {manifest_path}"]
+    entries: dict[str, dict] = {}
+    for tool in document["tools"]:
+        if (
+            not isinstance(tool, dict)
+            or not isinstance(tool.get("name"), str)
+            or not NAME_RE.fullmatch(tool["name"])
+        ):
+            problems.append("invalid manifest entry name")
+            continue
+        name = tool["name"]
+        if set(tool) != {"name", "upstream", "revision", "files", "digest"}:
+            problems.append(f"{name}: unexpected manifest entry fields")
+        for field in ("name", "upstream"):
+            value = tool.get(field)
+            if isinstance(value, str):
+                problems.extend(
+                    f"{name}: {field} violates policy: {label}"
+                    for label in policy_labels(value, rules)
+                )
+        if name in entries:
+            problems.append(f"{name}: duplicate manifest entry")
+            continue
+        entries[name] = tool
+        upstream = tool.get("upstream")
+        if not isinstance(upstream, str) or not (
+            upstream == name
+            or re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", upstream)
+        ):
+            problems.append(f"{name}: invalid upstream")
+        revision = tool.get("revision")
+        if not isinstance(revision, str) or not re.fullmatch(r"[0-9a-f]{40}", revision):
+            problems.append(f"{name}: invalid revision")
+        if type(tool.get("files")) is not int or tool["files"] < 0:
+            problems.append(f"{name}: invalid files")
+        digest = tool.get("digest")
+        if not isinstance(digest, str) or not re.fullmatch(r"sha256:[0-9a-f]{64}", digest):
+            problems.append(f"{name}: invalid digest")
+
+    directories = []
+    for path in sorted(dest.iterdir()):
+        if path == manifest_path:
+            continue
+        if path.is_symlink():
+            problems.append(f"{path.name}: symlink at mirror root")
+        elif path.is_dir() and NAME_RE.fullmatch(path.name):
+            directories.append(path)
+            problems.extend(
+                f"mirror root violates policy: {label}"
+                for label in policy_labels(path.name, rules)
+            )
+        else:
+            problems.append(f"{path.name}: unexpected entry at mirror root")
     for directory in directories:
         entry = entries.get(directory.name)
         if entry is None:
             problems.append(f"{directory.name}: missing manifest entry")
-            continue
-        digest = f"sha256:{tree_digest(directory)}"
-        if digest != entry["digest"]:
-            problems.append(
-                f"{directory.name}: digest mismatch ({digest} != {entry['digest']})"
-            )
-        for path, label, line in scan_tree(directory, rules):
+        findings = scan_tree(directory, rules)
+        for path, label, line in findings:
             location = f"{directory.name}/{path}:{line}" if line else f"{directory.name}/{path}"
             problems.append(f"{location}: {label}")
+        # Never hash a symlink target, even if it points outside the mirror.
+        if entry is not None and not any(
+            label == "symlink in mirror" for _, label, _ in findings
+        ):
+            count = sum(1 for path in directory.rglob("*") if path.is_file())
+            if type(entry.get("files")) is int and count != entry["files"]:
+                problems.append(
+                    f"{directory.name}: file count mismatch ({count} != {entry['files']})"
+                )
+            digest = f"sha256:{tree_digest(directory)}"
+            if digest != entry.get("digest"):
+                problems.append(
+                    f"{directory.name}: digest mismatch ({digest} != {entry.get('digest')})"
+                )
     for name in sorted(set(entries) - {directory.name for directory in directories}):
         problems.append(f"{name}: manifest entry without a mirror directory")
     return problems
